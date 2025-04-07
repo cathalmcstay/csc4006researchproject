@@ -4,37 +4,30 @@
 #include <mpi.h>
 
 void print_array(int *arr, int size) {
-    for (int i = 0; i < size; i++) printf("%d ", arr[i]);
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
     printf("\n");
 }
 
-int partition(int *arr, int low, int high, int verbose) {
-    int pivot = arr[high];
-    int i = low - 1;
-    
-    for (int j = low; j < high; j++) {
-        if (arr[j] < pivot) {
-            i++;
-            int tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+void bubble_sort(int *arr, int size, int verbose) {
+    int step = 1;
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+
+                if (verbose) {
+                    printf("Step %d: ", step++);
+                    print_array(arr, size);
+                }
+            }
         }
     }
-    int tmp = arr[i + 1]; arr[i + 1] = arr[high]; arr[high] = tmp;
-
-    if (verbose) {
-        printf("Pivot %d placed at index %d: ", pivot, i + 1);
-        print_array(arr + low, high - low + 1);
-    }
-
-    return i + 1;
 }
 
-void quick_sort(int *arr, int low, int high, int verbose) {
-    if (low < high) {
-        int pi = partition(arr, low, high, verbose);
-        quick_sort(arr, low, pi - 1, verbose);
-        quick_sort(arr, pi + 1, high, verbose);
-    }
-}
 int main(int argc, char **argv) {
     MPI_Init(&argc, &argv);
     int rank;
@@ -58,7 +51,7 @@ int main(int argc, char **argv) {
     }
 
     double start_time = MPI_Wtime();
-    quick_sort(arr, 0, size - 1, verbose);
+    bubble_sort(arr, size, verbose);
     double end_time = MPI_Wtime();
 
     if (!verbose) {
@@ -71,4 +64,3 @@ int main(int argc, char **argv) {
     MPI_Finalize();
     return 0;
 }
-

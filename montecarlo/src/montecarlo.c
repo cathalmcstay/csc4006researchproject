@@ -4,6 +4,7 @@
 #include <time.h>
 
 long long monte_carlo_pi(long long num_samples) {
+    // Monte Carlo simulation to estimate Pi
     long long count = 0;
     for (long long i = 0; i < num_samples; i++) {
         double x = (double)rand() / RAND_MAX;
@@ -16,6 +17,7 @@ long long monte_carlo_pi(long long num_samples) {
 }
 
 int main(int argc, char** argv) {
+    // Initialize MPI
     MPI_Init(&argc, &argv);
 
     int rank, size;

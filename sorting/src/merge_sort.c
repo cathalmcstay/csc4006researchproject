@@ -4,11 +4,13 @@
 #include <mpi.h>
 
 void print_array(int *arr, int size) {
+    // Print the array elements
     for (int i = 0; i < size; i++) printf("%d ", arr[i]);
     printf("\n");
 }
 
 void merge(int *arr, int l, int m, int r, int verbose) {
+    // Merge two halves of the array
     int n1 = m - l + 1;
     int n2 = r - m;
 
@@ -23,8 +25,8 @@ void merge(int *arr, int l, int m, int r, int verbose) {
         else arr[k++] = R[j++];
     }
 
-    while (i < n1) arr[k++] = L[i++];
-    while (j < n2) arr[k++] = R[j++];
+    while (i < n1) arr[k++] = L[i++]; // Copy remaining elements of L[] if any
+    while (j < n2) arr[k++] = R[j++]; // Copy remaining elements of R[] if any
 
     if (verbose) {
         printf("Merged: ");
@@ -33,6 +35,7 @@ void merge(int *arr, int l, int m, int r, int verbose) {
 }
 
 void merge_sort(int *arr, int l, int r, int verbose) {
+    // Sort the array using merge sort algorithm
     if (l < r) {
         int m = l + (r - l) / 2;
         merge_sort(arr, l, m, verbose);
@@ -42,6 +45,7 @@ void merge_sort(int *arr, int l, int r, int verbose) {
 }
 
 int main(int argc, char **argv) {
+    // Initialize MPI
     MPI_Init(&argc, &argv);
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -63,6 +67,7 @@ int main(int argc, char **argv) {
         print_array(arr, size);
     }
 
+    // Measure execution time
     double start_time = MPI_Wtime();
     merge_sort(arr, 0, size - 1, verbose);
     double end_time = MPI_Wtime();

@@ -4,11 +4,13 @@
 #include <mpi.h>
 
 void print_array(int *arr, int size) {
+    // Print the array elements
     for (int i = 0; i < size; i++) printf("%d ", arr[i]);
     printf("\n");
 }
 
 int partition(int *arr, int low, int high, int verbose) {
+    // Partition the array and return the pivot index
     int pivot = arr[high];
     int i = low - 1;
 
@@ -29,6 +31,7 @@ int partition(int *arr, int low, int high, int verbose) {
 }
 
 void quick_sort(int *arr, int low, int high, int verbose) {
+    // Sort the array using the quicksort algorithm
     if (low < high) {
         int pi = partition(arr, low, high, verbose);
         quick_sort(arr, low, pi - 1, verbose);
@@ -37,6 +40,7 @@ void quick_sort(int *arr, int low, int high, int verbose) {
 }
 
 int main(int argc, char **argv) {
+    // Initialize MPI
     MPI_Init(&argc, &argv);
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -58,6 +62,7 @@ int main(int argc, char **argv) {
         print_array(arr, size);
     }
 
+    // Measure execution time
     double start_time = MPI_Wtime();
     quick_sort(arr, 0, size - 1, verbose);
     double end_time = MPI_Wtime();

@@ -9,15 +9,18 @@ void bfs(int **adj, int n, int start) {
     int *queue = malloc(n * sizeof(int));
     int front = 0, rear = 0;
 
+    // Initialize the queue with the starting node
     visited[start] = true;
     queue[rear++] = start;
 
     printf("BFS traversal: ");
 
+    // Perform BFS
     while (front < rear) {
         int node = queue[front++];
         printf("%d ", node);
 
+        // Enqueue all unvisited neighbors
         for (int i = 0; i < n; i++) {
             if (adj[node][i] && !visited[i]) {
                 visited[i] = true;
@@ -28,6 +31,7 @@ void bfs(int **adj, int n, int start) {
 
     printf("\n");
 
+    // Free allocated memory
     free(visited);
     free(queue);
 }
@@ -40,6 +44,7 @@ int main(int argc, char **argv) {
     int n;
     scanf("%d", &n);
 
+    // Allocate memory for the adjacency matrix
     int **adj = malloc(n * sizeof(int *));
     for (int i = 0; i < n; i++) {
         adj[i] = malloc(n * sizeof(int));
@@ -47,11 +52,11 @@ int main(int argc, char **argv) {
             scanf("%d", &adj[i][j]);
         }
     }
-
     double start_time = MPI_Wtime();
     if (rank == 0) bfs(adj, n, 0);
     double end_time = MPI_Wtime();
 
+    // Synchronize all processes before printing the execution time
     if (rank == 0)
         printf("Execution time: %f seconds\n", end_time - start_time);
 
